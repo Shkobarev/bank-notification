@@ -1,6 +1,8 @@
 package com.example.bank_notification.repository;
 
 import com.example.bank_notification.model.BankCard;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
