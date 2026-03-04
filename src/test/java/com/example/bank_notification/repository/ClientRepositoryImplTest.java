@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ClientRepositoryImplTest {
 
@@ -84,6 +85,13 @@ public class ClientRepositoryImplTest {
             Optional<Client> found = repository.findById("client-001");
             assertThat(found).isPresent();
             assertThat(found.get().getFullName()).isEqualTo("Иван Петров Обновленный");
+        }
+
+        @Test
+        @DisplayName("Should throw exception when saving null card")
+        void shouldThrowExceptionWhenSavingNull() {
+            assertThatThrownBy(() -> repository.save(null))
+                    .isInstanceOf(NullPointerException.class);
         }
     }
 

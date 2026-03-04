@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 /**
@@ -135,6 +136,6 @@ public class BankCard {
      */
     public long daysUntilExpired(){
         if(isExpired()) return 0;
-        return LocalDate.now().until(expiryDate).getDays();
+        return ChronoUnit.DAYS.between(LocalDate.now(),expiryDate);
     }
 }

@@ -60,39 +60,45 @@ public class CardRepositoryImpl implements CardRepository{
     @Override
     public Optional<BankCard> findByCardNumber(String cardNumber) {
         if(cardNumber == null) return Optional.empty();
-        return Optional.ofNullable(storage.get(cardNumberIndexStorage.get(cardNumber)));
+        String cardId = cardNumberIndexStorage.get(cardNumber);
+        if(cardId == null) return Optional.empty();
+        return Optional.ofNullable(storage.get(cardId));
     }
 
     @Override
     public List<BankCard> findByClientId(String clientId) {
         if (clientId == null) return new ArrayList<>();
-        List<String> idCards = clientCardsIndexStorage.get(clientId);
+        List<String> idCards = clientCardsIndexStorage.getOrDefault(clientId,Collections.emptyList());
         return idCards.stream()
                 .map(storage::get)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<BankCard> findActiveCards() {
         return storage.values().stream()
                 .filter(BankCard::isActive)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<BankCard> findExpiringCards(int days) {
+        if (days < 0) return Collections.emptyList();
         return storage.values().stream()
+                .filter(BankCard::isActive)
+                .filter(c->!c.isExpired())
                 .filter(c->c.daysUntilExpired() <= days)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<BankCard> findAll() {
-        return storage.values().stream().toList();
+        return new ArrayList<>(storage.values());
     }
 
     @Override
     public boolean deleteById(String id) {
+        if(id == null) return false;
         BankCard removed = storage.remove(id);
         if(removed != null){
             cardNumberIndexStorage.remove(removed.getCardNumber());
@@ -107,6 +113,7 @@ public class CardRepositoryImpl implements CardRepository{
 
     @Override
     public boolean deleteByClientId(String clientId) {
+        if(clientId == null) return false;
         List<String> removed = clientCardsIndexStorage.remove(clientId);
         if(removed != null){
             for(String cardId: removed){
@@ -120,6 +127,7 @@ public class CardRepositoryImpl implements CardRepository{
 
     @Override
     public boolean existsByCardNumber(String cardNumber) {
+        if(cardNumber == null) return false;
         return cardNumberIndexStorage.containsKey(cardNumber);
     }
 
