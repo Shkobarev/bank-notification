@@ -1,10 +1,7 @@
 package com.example.bank_notification.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -86,8 +83,8 @@ public class Client {
      * @param fullName полное имя клиента
      * @param birthDate дата рождения
      * @param email электронная почта
-     * @param passportNumber номер паспорта (может быть null)
-     * @param phone номер телефона (может быть null)
+     * @param passportNumber номер паспорта
+     * @param phone номер телефона
      */
     public Client(String fullName,LocalDate birthDate,
                   String email, String passportNumber,
@@ -122,7 +119,7 @@ public class Client {
         if (birthDate == null) {
             return 0;
         } else {
-            return Period.between(LocalDate.now(),birthDate).getYears();
+            return Period.between(birthDate, LocalDate.now()).getYears();
         }
     }
 }

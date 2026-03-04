@@ -57,29 +57,36 @@ public class ClientRepositoryImpl implements ClientRepository{
     @Override
     public Optional<Client> findByFullNameAndBirthDate(String fullName, LocalDate birthDate) {
         if(fullName == null || birthDate == null) return Optional.empty();
+
+        String clientId = nameAndBirthIndexStorage.get(fullName+"|"+birthDate);
+        if(clientId == null) return Optional.empty();
+
         return Optional.ofNullable(storage.get(nameAndBirthIndexStorage.get(fullName+"|"+birthDate)));
     }
 
     @Override
     public Optional<Client> findByEmail(String email) {
         if(email == null) return Optional.empty();
-        return Optional.ofNullable(storage.get(emailIndexStorage.get(email)));
+
+        String clientId = emailIndexStorage.get(email);
+        if (clientId == null) return Optional.empty();
+
+        return Optional.ofNullable(storage.get(clientId));
     }
 
     @Override
     public Optional<Client> updateEmail(String clientId, String newEmail){
+        if(clientId == null) return Optional.empty();
+
         Client client = storage.get(clientId);
         if (client == null) return Optional.empty();
 
         String oldEmail = client.getEmail();
-        if(oldEmail != null)
-            emailIndexStorage.remove(oldEmail);
+        if(oldEmail != null)  emailIndexStorage.remove(oldEmail);
 
         client.setEmail(newEmail);
+        if (newEmail != null) emailIndexStorage.put(newEmail, clientId);
 
-        if (newEmail != null) {
-            emailIndexStorage.put(newEmail, clientId);
-        }
         return Optional.of(client);
     }
 
@@ -90,6 +97,7 @@ public class ClientRepositoryImpl implements ClientRepository{
 
     @Override
     public boolean deleteById(String id) {
+        if(id == null) return false;
         Client removed = storage.remove(id);
         if(removed != null){
             if(removed.getEmail() != null)
@@ -107,6 +115,7 @@ public class ClientRepositoryImpl implements ClientRepository{
 
     @Override
     public boolean existsById(String id) {
+        if(id == null) return false;
         return storage.containsKey(id);
     }
 }
