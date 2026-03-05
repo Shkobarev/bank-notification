@@ -39,13 +39,6 @@ public class Client {
     private LocalDate birthDate;
 
     /**
-     * Возраст клиента.
-     * Вычисляется автоматически на основе {@link #birthDate}.
-     * Не хранится в базе данных, а рассчитывается при каждом запросе.
-     */
-    private int age;
-
-    /**
      * Адрес электронной почты клиента.
      * Должен быть уникальным.
      * Формат: example@domain.com
@@ -92,22 +85,11 @@ public class Client {
         this.id = UUID.randomUUID().toString();
         this.fullName = fullName;
         this. birthDate = birthDate;
-        this.age = calculateAge();
         this.email = email;
         this.passportNumber = passportNumber;
         this.phone = phone;
         this.createdAt = LocalDate.now();
 
-    }
-
-    /**
-     * Устанавливает новую дату рождения и автоматически пересчитывает возраст.
-     *
-     * @param birthDate новая дата рождения
-     */
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-        this.age = calculateAge();
     }
 
     /**
