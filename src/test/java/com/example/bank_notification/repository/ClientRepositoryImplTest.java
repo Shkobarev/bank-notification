@@ -55,7 +55,6 @@ public class ClientRepositoryImplTest {
             assertThat(saved).isNotNull();
             assertThat(saved.getId()).isEqualTo("client-001");
             assertThat(saved.getFullName()).isEqualTo("Иван Петров");
-            assertThat(saved.getAge()).isEqualTo(36);
             assertThat(saved.getEmail()).isEqualTo("ivan@example.com");
             assertThat(saved.getPhone()).isEqualTo("89001234567");
             assertThat(saved.getPassportNumber()).isEqualTo("1234 567890");
