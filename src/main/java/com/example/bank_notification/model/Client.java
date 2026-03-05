@@ -91,18 +91,5 @@ public class Client {
         this.createdAt = LocalDate.now();
 
     }
-
-    /**
-     * Вычисляет возраст клиента на основе даты рождения.
-     *
-     * @return возраст клиента в годах, или 0 если {@link #birthDate} не указана
-     */
-    private int calculateAge() {
-        if (birthDate == null) {
-            return 0;
-        } else {
-            return Period.between(birthDate, LocalDate.now()).getYears();
-        }
-    }
 }
 
