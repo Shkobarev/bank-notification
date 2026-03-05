@@ -115,7 +115,7 @@ public class BankCard {
         }
         String cleanNumber = cardNumber.replaceAll("[^0-9]", "");
         String last4 = cleanNumber.substring(cleanNumber.length() - 4);
-        return "**** **** **** " + last4;
+        return "****-****-****-" + last4;
     }
 
     /**
