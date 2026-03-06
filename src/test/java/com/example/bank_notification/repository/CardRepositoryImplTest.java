@@ -518,6 +518,48 @@ public class CardRepositoryImplTest {
     }
 
     @Nested
+    @DisplayName("existsById() method tests")
+    class ExistsByIdTests{
+
+        @Test
+        @DisplayName("Should return true for existing card ID")
+        void shouldReturnTrueForExistingCardId() {
+            repository.save(activeCard);
+
+            boolean exists = repository.existsById("card-001");
+
+            assertThat(exists).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should return false for non-existent card ID")
+        void shouldReturnFalseForNonExistentCardId() {
+            boolean exists = repository.existsById("non-existent-id");
+
+            assertThat(exists).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should return false for null ID")
+        void shouldReturnFalseForNullId() {
+            boolean exists = repository.existsById(null);
+
+            assertThat(exists).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should return false for deleted card")
+        void shouldReturnFalseForDeletedCard() {
+            repository.save(activeCard);
+            repository.deleteById("card-001");
+
+            boolean exists = repository.existsById("card-001");
+
+            assertThat(exists).isFalse();
+        }
+    }
+
+    @Nested
     @DisplayName("existsByCardNumber() method tests")
     class ExistsByCardNumberTests {
 

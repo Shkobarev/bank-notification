@@ -87,6 +87,14 @@ public interface CardRepository {
     boolean deleteByClientId(String clientId);
 
     /**
+     * Проверяет существование карты с указанным id.
+     *
+     * @param cardId id карты
+     * @return true если карта с таким id существует, false в противном случае
+     */
+    boolean existsById(String cardId);
+
+    /**
      * Проверяет существование карты с указанным номером.
      *
      * @param cardNumber номер карты для проверки

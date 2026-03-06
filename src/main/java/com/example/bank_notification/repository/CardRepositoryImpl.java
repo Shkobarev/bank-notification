@@ -126,6 +126,12 @@ public class CardRepositoryImpl implements CardRepository{
     }
 
     @Override
+    public boolean existsById(String cardId){
+        if(cardId == null) return false;
+        return storage.containsKey(cardId);
+    }
+
+    @Override
     public boolean existsByCardNumber(String cardNumber) {
         if(cardNumber == null) return false;
         return cardNumberIndexStorage.containsKey(cardNumber);
