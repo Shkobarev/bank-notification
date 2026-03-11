@@ -102,23 +102,6 @@ public class BankCard {
     }
 
     /**
-     * Возвращает маскированный номер карты.
-     * Отображаются только последние 4 цифры, остальные заменены звездочками.
-     * Пример: "**** **** **** 3456"
-     *
-     * @return маскированный номер карты
-     *         возвращает "****", если номер карты отсутствует
-     */
-    public String getMaskedNumber() {
-        if (cardNumber == null || cardNumber.length() < 4) {
-            return "****";
-        }
-        String cleanNumber = cardNumber.replaceAll("[^0-9]", "");
-        String last4 = cleanNumber.substring(cleanNumber.length() - 4);
-        return "****-****-****-" + last4;
-    }
-
-    /**
      * Проверяет, истек ли срок действия карты.
      *
      * @return {@code true} если {@link #expiryDate} раньше текущей даты,
