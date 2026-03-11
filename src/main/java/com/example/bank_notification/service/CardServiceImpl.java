@@ -87,6 +87,17 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    public List<CardDto> getCardsExpiringExactly(int days){
+        if (days < 0) {
+            throw new IllegalArgumentException("Days cannot be negative");
+        }
+
+        return cardRepository.findCardsExpiringExactly(days).stream()
+                .map(cardMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<CardDto> getExpiringCards(int days) {
         if (days < 0) {
             throw new IllegalArgumentException("Days cannot be negative");

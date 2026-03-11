@@ -303,6 +303,112 @@ public class CardRepositoryImplTest {
     }
 
     @Nested
+    @DisplayName("findCardsExpiringExactlyIn() method tests")
+    class FindCardsExpiringExactlyInTests {
+
+        @Test
+        @DisplayName("Should find cards expiring exactly in specified days")
+        void shouldFindCardsExpiringExactlyIn() {
+            BankCard testCard = new BankCard(
+                    "client-004",
+                    "1111-2222-3333-4444",
+                    LocalDate.now().minusYears(2),
+                    LocalDate.now().plusDays(15),
+                    "VISA"
+            );
+            testCard.setId("card-015");
+            testCard.setActive(true);
+            repository.save(testCard);
+
+            repository.save(activeCard);
+            repository.save(inactiveCard);
+            repository.save(expiringCard);
+            repository.save(expiredCard);
+
+            List<BankCard> result = repository.findCardsExpiringExactly(15);
+
+            assertThat(result).hasSize(2);
+            assertThat(result).extracting(BankCard::getId)
+                    .containsExactlyInAnyOrder("card-003", "card-015");
+
+            for (BankCard card : result) {
+                assertThat(card.daysUntilExpired()).isEqualTo(15);
+                assertThat(card.isActive()).isTrue();
+            }
+        }
+
+        @Test
+        @DisplayName("Should return empty list when no cards expire exactly in given days")
+        void shouldReturnEmptyWhenNoExactMatches() {
+            repository.save(activeCard);
+            repository.save(expiringCard);
+            repository.save(expiredCard);
+
+            List<BankCard> result = repository.findCardsExpiringExactly(99);
+
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        @DisplayName("Should not include inactive cards")
+        void shouldNotIncludeInactiveCards() {
+            BankCard testCard = new BankCard(
+                    "client-005",
+                    "5555-6666-7777-8888",
+                    LocalDate.now().minusYears(2),
+                    LocalDate.now().plusDays(15),
+                    "Mastercard"
+            );
+            testCard.setId("card-inactive-15");
+            testCard.setActive(false);
+            repository.save(testCard);
+
+            repository.save(expiringCard);
+
+            List<BankCard> result = repository.findCardsExpiringExactly(15);
+
+            assertThat(result).hasSize(1);
+            assertThat(result.getFirst().getId()).isEqualTo("card-003");
+            assertThat(result.getFirst().isActive()).isTrue();
+        }
+
+        @Test
+        @DisplayName("Should not include expired cards")
+        void shouldNotIncludeExpiredCards() {
+            BankCard testCard = new BankCard(
+                    "client-006",
+                    "9999-8888-7777-6666",
+                    LocalDate.now().minusYears(3),
+                    LocalDate.now().minusDays(15),
+                    "MIR"
+            );
+            testCard.setId("card-expired-15");
+            testCard.setActive(true);
+            repository.save(testCard);
+
+            repository.save(expiringCard);
+
+            List<BankCard> result = repository.findCardsExpiringExactly(15);
+
+            assertThat(result).hasSize(1);
+            assertThat(result.getFirst().getId()).isEqualTo("card-003");
+            assertThat(result.getFirst().isExpired()).isFalse();
+        }
+
+        @Test
+        @DisplayName("Should return empty list when cards have different expiry days")
+        void shouldReturnEmptyWhenCardsHaveDifferentExpiryDays() {
+            repository.save(activeCard);
+            repository.save(expiringCard);
+            repository.save(expiredCard);
+
+            List<BankCard> result = repository.findCardsExpiringExactly(10);
+
+            assertThat(result).isEmpty();
+        }
+    }
+
+    @Nested
     @DisplayName("findExpiringCards() method tests")
     class FindExpiringCardsTests {
 
@@ -310,7 +416,7 @@ public class CardRepositoryImplTest {
         @DisplayName("Should find cards expiring within specified days")
         void shouldFindCardsExpiringWithinDays() {
             repository.save(activeCard);
-            repository.save(expiringCard);  // expires in 15 days
+            repository.save(expiringCard);
             repository.save(expiredCard);
 
             List<BankCard> expiringIn2Days = repository.findExpiringCards(2);
@@ -338,7 +444,6 @@ public class CardRepositoryImplTest {
 
             List<BankCard> expiringToday = repository.findExpiringCards(0);
 
-            // Assert
             assertThat(expiringToday).hasSize(1);
             assertThat(expiringToday.getFirst().getId()).isEqualTo("card-today");
         }

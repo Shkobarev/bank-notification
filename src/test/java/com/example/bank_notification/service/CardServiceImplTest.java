@@ -282,6 +282,37 @@ public class CardServiceImplTest {
     }
 
     @Nested
+    @DisplayName("getCardsExpiringExactlyIn() tests")
+    class GetCardsExpiringExactlyInTests {
+
+        @Test
+        @DisplayName("Should return cards expiring exactly in specified days")
+        void shouldReturnCardsExpiringExactlyIn() {
+            int days = 1;
+            List<BankCard> exactCards = List.of(testCard);
+
+            when(cardRepository.findCardsExpiringExactly(days)).thenReturn(exactCards);
+            when(cardMapper.toDto(testCard)).thenReturn(testCardDto);
+
+            List<CardDto> result = cardService.getCardsExpiringExactly(days);
+
+            assertThat(result).hasSize(1);
+            assertThat(result.getFirst().getId()).isEqualTo("card-123");
+
+            verify(cardRepository).findCardsExpiringExactly(days);
+            verify(cardMapper).toDto(testCard);
+        }
+
+        @Test
+        @DisplayName("Should throw exception when days negative")
+        void shouldThrowExceptionWhenDaysNegative() {
+            assertThatThrownBy(() -> cardService.getCardsExpiringExactly(-5))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("Days cannot be negative");
+        }
+    }
+
+    @Nested
     @DisplayName("getExpiringCards() tests")
     class GetExpiringCardsTests {
 

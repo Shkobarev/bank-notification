@@ -82,6 +82,16 @@ public class CardRepositoryImpl implements CardRepository{
     }
 
     @Override
+    public List<BankCard> findCardsExpiringExactly(int days){
+        if (days < 0) return Collections.emptyList();
+        return storage.values().stream()
+                .filter(BankCard::isActive)
+                .filter(c->!c.isExpired())
+                .filter(c->c.daysUntilExpired() == days)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<BankCard> findExpiringCards(int days) {
         if (days < 0) return Collections.emptyList();
         return storage.values().stream()
