@@ -44,6 +44,11 @@ public class ClientServiceImpl implements ClientService{
         });
 
         Client client = new Client(fullName, birthDate, email, passportNumber, phone);
+        // При добавлении БД, я понял, что она сама генерирует ID, но при создании клиента(карты) у меня
+        // тоже генерируется ID, и получается что ID перезаписывается при сохранении в базу данных.
+        // Я думаю, что нужно убрать генерацию ID в моделях и сделать отдельно в репозиториях
+        // (но пока мне это не как не мешает, просто перезаписывается id)(также происходит с картами)
+        // TODO
         Client saved = clientRepository.save(client);
 
         ClientDto dto = clientMapper.toDto(saved);
