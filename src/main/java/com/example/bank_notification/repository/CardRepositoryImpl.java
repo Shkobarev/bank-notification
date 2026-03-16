@@ -1,6 +1,7 @@
 package com.example.bank_notification.repository;
 
 import com.example.bank_notification.model.BankCard;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * Хранит данные в оперативной памяти с использованием индексов для быстрого поиска.
  */
 @Repository
+@ConditionalOnProperty(name = "repository.type", havingValue = "memory", matchIfMissing = true)
 public class CardRepositoryImpl implements CardRepository{
 
     /**
@@ -148,7 +150,7 @@ public class CardRepositoryImpl implements CardRepository{
     }
 
     @Override
-    public int count() {
+    public long count() {
         return storage.size();
     }
 

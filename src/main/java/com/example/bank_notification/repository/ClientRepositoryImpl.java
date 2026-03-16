@@ -1,6 +1,7 @@
 package com.example.bank_notification.repository;
 
 import com.example.bank_notification.model.Client;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Хранит данные в оперативной памяти с использованием индексов для быстрого поиска.
  */
 @Repository
+@ConditionalOnProperty(name = "repository.type", havingValue = "memory", matchIfMissing = true)
 public class ClientRepositoryImpl implements ClientRepository{
 
     /**
@@ -109,7 +111,7 @@ public class ClientRepositoryImpl implements ClientRepository{
     }
 
     @Override
-    public int count() {
+    public long count() {
         return storage.size();
     }
 

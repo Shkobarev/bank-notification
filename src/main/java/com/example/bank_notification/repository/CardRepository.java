@@ -115,7 +115,7 @@ public interface CardRepository {
      *
      * @return количество карт
      */
-    int count();
+    long count();
 
     /**
      * Возвращает количество активных карт в репозитории.

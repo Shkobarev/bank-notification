@@ -75,7 +75,7 @@ import java.util.Optional;
      *
      * @return количество клиентов
      */
-    int count();
+    long count();
 
     /**
      * Проверяет существование клиента по идентификатору.
