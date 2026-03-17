@@ -1,6 +1,7 @@
 package com.example.bank_notification.service;
 
 import com.example.bank_notification.dto.ClientDto;
+import com.example.bank_notification.dto.response.ClientCreationResult;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +24,19 @@ public interface ClientService {
      */
     ClientDto createClient(String fullName, LocalDate birthDate,
                            String email, String phone, String passportNumber);
+
+    /**
+     * Создает нового клиента или возвращает существующего с флагом создания.
+     *
+     * @param fullName полное имя клиента (ФИО)
+     * @param birthDate дата рождения
+     * @param email электронная почта
+     * @param phone номер телефона
+     * @param passportNumber номер паспорта в формате "1234 567890"
+     * @return созданный или существующий клиент в виде {@link ClientCreationResult}
+     */
+    ClientCreationResult createClientWithResult(String fullName, LocalDate birthDate,
+                                                String email, String phone, String passportNumber);
 
     /**
      * Возвращает клиента по его уникальному идентификатору.

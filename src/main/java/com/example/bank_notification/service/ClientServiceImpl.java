@@ -3,6 +3,7 @@ package com.example.bank_notification.service;
 import com.example.bank_notification.dto.CardDto;
 import com.example.bank_notification.dto.ClientDto;
 import com.example.bank_notification.dto.mapper.ClientMapper;
+import com.example.bank_notification.dto.response.ClientCreationResult;
 import com.example.bank_notification.model.Client;
 import com.example.bank_notification.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +23,26 @@ public class ClientServiceImpl implements ClientService{
     private final ClientMapper clientMapper;
 
     @Override
-    public ClientDto createClient(String fullName, LocalDate birthDate, String email, String phone, String passportNumber) {
-        Optional<Client> existingClient = clientRepository.findByFullNameAndBirthDate(fullName,birthDate);
+    public ClientCreationResult createClientWithResult(String fullName,
+                                                       LocalDate birthDate,
+                                                       String email,
+                                                       String phone,
+                                                       String passportNumber) {
+        Optional<Client> existingClient = clientRepository.findByFullNameAndBirthDate(fullName, birthDate);
 
-        if(existingClient.isPresent()){
+        if (existingClient.isPresent()) {
             // Важно!!!
             // Проверяется существование клиента в базе данных только по ФИО и дате рождения
             // Если указаны другая почта, номер телефона или паспорт, вернется из базы клиент со старыми данными
             // Нужно либо сделать уведомление о том что необходимо изменить данные клиента(думаю так лучше),
             // либо тут же заменить данные
             // TODO
+
             ClientDto clientDto = clientMapper.toDto(existingClient.get());
             clientDto.setCardIds(cardService.getClientCards(clientDto.getId()).stream()
                     .map(CardDto::getId)
                     .collect(Collectors.toList()));
-            return clientDto;
+            return new ClientCreationResult(clientDto, false);
         }
 
         clientRepository.findByEmail(email).ifPresent(c -> {
@@ -54,7 +60,16 @@ public class ClientServiceImpl implements ClientService{
         ClientDto dto = clientMapper.toDto(saved);
         dto.setCardIds(List.of());
 
-        return dto;
+        return new ClientCreationResult(dto, true);
+    }
+
+    @Override
+    public ClientDto createClient(String fullName,
+                                  LocalDate birthDate,
+                                  String email,
+                                  String phone,
+                                  String passportNumber) {
+        return createClientWithResult(fullName, birthDate, email, phone, passportNumber).getClientDto();
     }
 
     @Override
