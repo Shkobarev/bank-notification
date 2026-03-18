@@ -1,6 +1,5 @@
 package com.example.bank_notification;
 
-import com.example.bank_notification.dto.NotificationDto;
 import com.example.bank_notification.model.BankCard;
 import com.example.bank_notification.model.Client;
 import com.example.bank_notification.repository.CardRepository;
@@ -10,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.time.LocalDate;
@@ -24,6 +24,7 @@ public class BankNotificationApplication {
 	}
 
 	@Bean
+	@Profile("!test")
 	public CommandLineRunner testData(ClientRepository clientRepository, CardRepository cardRepository) {
 		return args -> {
 			try {
