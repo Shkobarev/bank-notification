@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ClientsPage from './pages/ClientsPage';
+import ClientFormPage from './pages/ClientFormPage'
 
 function App() {
   return (
@@ -27,8 +28,8 @@ function App() {
                       </Link>
                   </div>
               } />
-            <Route path="/" element={<ClientsPage />} />
-            <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/clients/new" element={<ClientFormPage />} />
           </Routes>
         </div>
       </BrowserRouter>

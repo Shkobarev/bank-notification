@@ -21,7 +21,7 @@ public class CreateClientRequest {
     @Size(max = 100, message = "Email must not exceed 100 characters")
     private String email;
 
-    @Pattern(regexp = "^\\d{4}\\s\\d{6}$", message = "Passport number must be in format '1234 567890'")
+    @Pattern(regexp = "^\\d{10}$", message = "Passport number must be in format '1234 567890'")
     private String passportNumber;
 
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Phone number must be 10-15 digits")

@@ -45,9 +45,11 @@ public class ClientServiceImpl implements ClientService{
             return new ClientCreationResult(clientDto, false);
         }
 
-        clientRepository.findByEmail(email).ifPresent(c -> {
-            throw new IllegalArgumentException("Email already in use: " + email);
-        });
+        if(email != null) {
+            clientRepository.findByEmail(email).ifPresent(c -> {
+                throw new IllegalArgumentException("Email already in use: " + email);
+            });
+        }
 
         Client client = new Client(fullName, birthDate, email, passportNumber, phone);
         // При добавлении БД, я понял, что она сама генерирует ID, но при создании клиента(карты) у меня
