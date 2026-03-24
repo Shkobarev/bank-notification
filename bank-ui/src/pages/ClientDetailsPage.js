@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getClientById, getClientCards, createCard, cancelCard } from '../services/api';
+import {getClientById, getClientCards, createCard, cancelCard, updateEmail} from '../services/api';
 
 function ClientDetailsPage(){
     const {id} = useParams();
@@ -10,10 +10,15 @@ function ClientDetailsPage(){
     const [cards, setCards] = useState([]);
     const [cardType, setCardType] = useState('VISA');
     const [validityYears,setValidityYears] = useState(3);
+    const [newEmail, setNewEmail] = useState('');
+
+    const [showCardForm, setShowCardForm] = useState(false);
+    const [showEmailForm, setShowEmailForm] = useState(false);
+
+    const [updating, setUpdating] = useState(false);
     const [loading,setLoading] = useState(false);
     const [actionLoading, setActionLoading] = useState(false);
     const [error, setError] = useState(false);
-    const [showCardForm, setShowCardForm] = useState(false);
 
     useEffect(() => {
         loadData();
@@ -72,6 +77,25 @@ function ClientDetailsPage(){
         }
     }
 
+    const handleUpdateEmail = async (e) => {
+        e.preventDefault();
+        if (!newEmail.trim()) return;
+        setUpdating(true);
+        try{
+            await updateEmail(id,newEmail);
+            setClient({ ...client, email: newEmail });
+            setShowEmailForm(false);
+            setNewEmail('');
+        }
+        catch (err){
+            console.error('Ошибка обновления email:', err);
+            alert(err.response?.data?.message || 'Ошибка обновления email');
+        }
+        finally {
+            setUpdating(false);
+        }
+    }
+
     if (loading) {
         return <div className="text-center mt-5">Загрузка...</div>;
     }
@@ -95,11 +119,46 @@ function ClientDetailsPage(){
                     <h2 className="card-title">{client.fullName}</h2>
                     <p className="card-text">
                         <strong>Дата рождения:</strong> {client.birthDate} ({client.age} лет)<br />
-                        <strong>Email:</strong> {client.email || '—'}<br />
+                        <strong>Email:</strong> {client.email || '—'}
+                        <button
+                            onClick={() => setShowEmailForm(!showEmailForm)}
+                            className="btn btn-sm btn-outline-secondary ms-2"
+                        >
+                            Изменить
+                        </button>
+                        <br />
                         <strong>Телефон:</strong> {client.phone || '—'}<br />
                         <strong>Паспорт:</strong> {client.passportNumber || '—'}
                     </p>
                 </div>
+
+                {showEmailForm && (
+                    <form onSubmit={handleUpdateEmail} className="mt-3">
+                        <div className="input-group">
+                            <input
+                                type="email"
+                                className="form-control"
+                                value={newEmail}
+                                onChange={(e) => setNewEmail(e.target.value)}
+                                placeholder="Новый email"
+                                required
+                            />
+                            <button type="submit" className="btn btn-primary" disabled={updating}>
+                                {updating ? 'Сохранение...' : 'Сохранить'}
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => {
+                                    setShowEmailForm(false);
+                                    setNewEmail('');
+                                }}
+                            >
+                                Отмена
+                            </button>
+                        </div>
+                    </form>
+                )}
             </div>
 
             <div className="d-flex justify-content-between align-items-center mb-3">
@@ -109,7 +168,7 @@ function ClientDetailsPage(){
                     className="btn btn-primary"
                     disabled={actionLoading}
                 >
-                    {showCardForm ? 'Отмена' : '+ Выпустить карту'}
+                    {showCardForm ? 'Отмена' : 'Выпустить карту'}
                 </button>
             </div>
 
@@ -128,7 +187,7 @@ function ClientDetailsPage(){
                                 >
                                     <option value="VISA">VISA</option>
                                     <option value="Mastercard">Mastercard</option>
-                                    <option value="MIR">МИР</option>
+                                    <option value="MIR">MIR</option>
                                 </select>
                             </div>
                             <div className="col-md-5">
