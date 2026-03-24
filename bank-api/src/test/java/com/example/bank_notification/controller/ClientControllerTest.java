@@ -68,7 +68,7 @@ public class ClientControllerTest {
             request.setBirthDate(birthDate);
             request.setEmail("ivan@mail.com");
             request.setPhone("+79001234567");
-            request.setPassportNumber("1234 567890");
+            request.setPassportNumber("1234567890");
 
             when(clientService.createClientWithResult(
                     anyString(), any(), anyString(), anyString(), anyString()))
@@ -91,7 +91,7 @@ public class ClientControllerTest {
             request.setBirthDate(birthDate);
             request.setEmail("ivan@mail.com");
             request.setPhone("+79001234567");
-            request.setPassportNumber("1234 567890");
+            request.setPassportNumber("1234567890");
 
             when(clientService.createClientWithResult(
                     anyString(), any(), anyString(), anyString(), anyString()))

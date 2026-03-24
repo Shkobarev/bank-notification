@@ -21,6 +21,7 @@ public class CreateClientRequest {
     @Size(max = 100, message = "Email must not exceed 100 characters")
     private String email;
 
+    //На Ui используется специальный паттерн #### ######, но на бэкэнд передается слитно
     @Pattern(regexp = "^\\d{10}$", message = "Passport number must be in format '1234 567890'")
     private String passportNumber;
 
