@@ -80,7 +80,11 @@ public class ClientRepositoryAdapter implements ClientRepository{
     @Override
     @Transactional
     public boolean deleteById(String id) {
-        if(jpaRepository.existsById(id)){
+        if (jpaRepository.existsById(id)) {
+            List<CardEntity> cards = cardJpaRepository.findByClientId(id);
+            if (!cards.isEmpty()) {
+                cardJpaRepository.deleteAll(cards);
+            }
             jpaRepository.deleteById(id);
             return true;
         }
