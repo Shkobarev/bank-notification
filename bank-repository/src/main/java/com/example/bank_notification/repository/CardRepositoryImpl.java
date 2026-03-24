@@ -45,6 +45,11 @@ public class CardRepositoryImpl implements CardRepository{
 
     @Override
     public BankCard save(BankCard card) {
+        if (card.getId() != null && storage.containsKey(card.getId())) {
+            storage.put(card.getId(), card);
+            cardNumberIndexStorage.put(card.getCardNumber(), card.getId());
+            return card;
+        }
         storage.put(card.getId(),card);
         cardNumberIndexStorage.put(card.getCardNumber(),card.getId());
         clientCardsIndexStorage.computeIfAbsent(card.getClientId(),
