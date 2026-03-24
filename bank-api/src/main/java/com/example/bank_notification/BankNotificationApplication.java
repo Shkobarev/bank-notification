@@ -23,44 +23,47 @@ public class BankNotificationApplication {
 		SpringApplication.run(BankNotificationApplication.class, args);
 	}
 
-	@Bean
-	@Profile("!test")
-	public CommandLineRunner testData(ClientRepository clientRepository, CardRepository cardRepository) {
-		return args -> {
-			try {
-				Client client = new Client(
-						"Петр Петров",
-						LocalDate.of(2004, 7, 3),
-						"petr@gmail.com",
-						"1234 567890",
-						""
-				);
-
-				client = clientRepository.save(client);
-				log.info("Создан клиент:");
-				log.info("   ID: {}", client.getId());
-				log.info("   Имя: {}", client.getFullName());
-				log.info("   Email: {}", client.getEmail());
-
-				BankCard card14;
-                card14 = new BankCard(
-                        client.getId(),
-                        "4111111111111111",
-                        LocalDate.now(),
-                        LocalDate.now().plusDays(14),
-                        "VISA"
-                );
-
-                card14 = cardRepository.save(card14);
-				log.info("Создана карта (14 дней):");
-				log.info("   ID: {}", card14.getId());
-				log.info("   Номер: {}", card14.getCardNumber());
-				log.info("   Истекает: {}", card14.getExpiryDate());
-				log.info("   Осталось дней: {}", card14.daysUntilExpired());
-
-			} catch (Exception e) {
-				log.error("Ошибка при создании тестовых данных: {}", e.getMessage(), e);
-			}
-		};
-	}
+//	@Bean
+//	@Profile("!test")
+//	public CommandLineRunner testData(ClientRepository clientRepository, CardRepository cardRepository) {
+//		return args -> {
+//			if (clientRepository.count() > 0) {
+//				return;
+//			}
+//			try {
+//				Client client = new Client(
+//						"Петр Петров",
+//						LocalDate.of(2004, 7, 3),
+//						"danila564321@gmail.com",
+//						"1234 567890",
+//						""
+//				);
+//
+//				client = clientRepository.save(client);
+//				log.info("Создан клиент:");
+//				log.info("   ID: {}", client.getId());
+//				log.info("   Имя: {}", client.getFullName());
+//				log.info("   Email: {}", client.getEmail());
+//
+//				BankCard card14;
+//                card14 = new BankCard(
+//                        client.getId(),
+//                        "4111111111111111",
+//                        LocalDate.now(),
+//                        LocalDate.now().plusDays(14),
+//                        "VISA"
+//                );
+//
+//                card14 = cardRepository.save(card14);
+//				log.info("Создана карта (14 дней):");
+//				log.info("   ID: {}", card14.getId());
+//				log.info("   Номер: {}", card14.getCardNumber());
+//				log.info("   Истекает: {}", card14.getExpiryDate());
+//				log.info("   Осталось дней: {}", card14.daysUntilExpired());
+//
+//			} catch (Exception e) {
+//				log.error("Ошибка при создании тестовых данных: {}", e.getMessage(), e);
+//			}
+//		};
+//	}
 }
