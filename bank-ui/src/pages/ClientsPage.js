@@ -86,7 +86,7 @@ function ClientsPage(){
                                 <td>{client.email || '—'}</td>
                                 <td>{client.phone || '—'}</td>
                                 <td>
-                                        <span className="badge bg-info">
+                                        <span>
                                             {client.cardIds?.length || 0}
                                         </span>
                                 </td>
