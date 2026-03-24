@@ -28,6 +28,9 @@ public class ClientRepositoryAdapterTest {
     @Mock
     private ClientJpaRepository jpaRepository;
 
+    @Mock
+    private CardJpaRepository cardJpaRepository;
+
     @InjectMocks
     private ClientRepositoryAdapter adapter;
 

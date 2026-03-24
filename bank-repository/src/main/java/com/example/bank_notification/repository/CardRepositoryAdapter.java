@@ -23,6 +23,17 @@ public class CardRepositoryAdapter implements CardRepository{
     @Override
     @Transactional
     public BankCard save(BankCard card) {
+        if (card.getId() != null && cardJpaRepository.existsById(card.getId())) {
+            CardEntity existing = cardJpaRepository.findById(card.getId()).get();
+            existing.setActive(card.isActive());
+            existing.setCardNumber(card.getCardNumber());
+            existing.setIssueDate(card.getIssueDate());
+            existing.setExpiryDate(card.getExpiryDate());
+            existing.setCardType(card.getCardType());
+
+            return toModel(cardJpaRepository.save(existing));
+        }
+
         CardEntity entity = new CardEntity(
                 clientJpaRepository.findById(card.getClientId()).orElseThrow(),
                 card.getCardNumber(),

@@ -1,5 +1,6 @@
 package com.example.bank_notification.repository;
 
+import com.example.bank_notification.entity.CardEntity;
 import com.example.bank_notification.entity.ClientEntity;
 import com.example.bank_notification.model.Client;
 import jakarta.transaction.Transactional;
@@ -19,10 +20,21 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClientRepositoryAdapter implements ClientRepository{
     private final ClientJpaRepository jpaRepository;
+    private final CardJpaRepository cardJpaRepository;
 
     @Override
     @Transactional
     public Client save(Client client) {
+        if (client.getId() != null && jpaRepository.existsById(client.getId())) {
+            ClientEntity existing = jpaRepository.findById(client.getId()).get();
+            existing.setFullName(client.getFullName());
+            existing.setBirthDate(client.getBirthDate());
+            existing.setEmail(client.getEmail());
+            existing.setPassportNumber(client.getPassportNumber());
+            existing.setPhone(client.getPhone());
+            return toModel(jpaRepository.save(existing));
+        }
+
         ClientEntity entity = new ClientEntity(
                 client.getFullName(),
                 client.getBirthDate(),
