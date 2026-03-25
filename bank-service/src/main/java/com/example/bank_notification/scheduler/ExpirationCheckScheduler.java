@@ -30,11 +30,11 @@ public class ExpirationCheckScheduler {
         processCards(30,"30 дней");
     }
 
-    @Scheduled(cron = "${scheduler.cron.test}")
-    public void checkCardsExpiringTest() {
-        if (!schedulerEnabled) return;
-        processCards(14, "14 дней");
-    }
+//    @Scheduled(cron = "${scheduler.cron.test}")
+//    public void checkCardsExpiringTest() {
+//        if (!schedulerEnabled) return;
+//        processCards(14, "14 дней");
+//    }
 
     private void processCards(int days, String period) {
         try {
