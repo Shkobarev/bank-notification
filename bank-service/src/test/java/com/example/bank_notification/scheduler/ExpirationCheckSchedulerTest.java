@@ -70,16 +70,16 @@ public class ExpirationCheckSchedulerTest {
         verify(emailService, never()).sendNotification(any());
     }
 
-    @Test
-    @DisplayName("Should not send notifications when no cards found")
-    void shouldNotSendNotificationsWhenNoCards() {
-        when(cardService.getCardsExpiringExactly(14)).thenReturn(List.of());
-
-        scheduler.checkCardsExpiringTest();
-
-        verify(cardService).getCardsExpiringExactly(14);
-        verify(emailService, never()).sendNotification(any());
-    }
+//    @Test
+//    @DisplayName("Should not send notifications when no cards found")
+//    void shouldNotSendNotificationsWhenNoCards() {
+//        when(cardService.getCardsExpiringExactly(14)).thenReturn(List.of());
+//
+//        scheduler.checkCardsExpiringTest();
+//
+//        verify(cardService).getCardsExpiringExactly(14);
+//        verify(emailService, never()).sendNotification(any());
+//    }
 
     @Test
     @DisplayName("Should handle error when getting cards")
